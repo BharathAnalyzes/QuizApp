@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Body from './components/Body';
+import React, { useState } from 'react'
+import StartScreen from './components/StartScreen';
+import EasyQuestion from './components/EasyQuestion';
+import MediumQuestion from "./components/MediumQuestion";
+import HardQuestion from "./components/HardQuestion";
+import questionContext  from './MockData/context';
+const App = () => {
+  const [score, setTotalScore] = useState(0);
+  const approuter=createBrowserRouter([
+    {
+      path: "/",
+      element :<StartScreen/>
+    },
+    {
+      path: "/easyquestion",
+      element :<EasyQuestion/>
+    },
+    {
+      path: "/mediumquestion",
+      element :<MediumQuestion/>
+    },
+    {
+      path: "/hardquestion",
+      element :<HardQuestion/>
+    },
+  ]);
+   return (
+    <questionContext.Provider value={{ totalScore:score, setTotalScore }}>
+      <RouterProvider router={approuter} />
+    </questionContext.Provider>
   );
 }
 
-export default App;
+export default App
+
