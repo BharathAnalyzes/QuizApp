@@ -3,7 +3,7 @@ import question from "../MockData/question.json";
 import questionContext from '../MockData/context';
 import { useNavigate } from 'react-router-dom';
 
-const EasyQuestion = () => {
+const MediumQuestion = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState("");
     const [isCorrectAnswer, setIsCorrectAnswer] = useState(null);
@@ -12,12 +12,14 @@ const EasyQuestion = () => {
     const questions = question?.medium;
     const { totalScore, setTotalScore } = useContext(questionContext);
     const navigate = useNavigate(); // Hook to handle navigation
+    const [localScore, setlocalScore] = useState(0);
 
     // Function to validate the selected answer
     const validateRightAnswer = () => {
         if (questions?.[currentIndex]?.correctAnswer.trim().toLowerCase() === selectedOption.trim().toLowerCase()) {
             setIsCorrectAnswer(true);  // Correct answer
-            setTotalScore(totalScore + 20); // Increase score by 10
+            //setTotalScore(totalScore + 20); // Increase score by 10
+            setlocalScore(localScore+20)
         } else {
             setIsCorrectAnswer(false); // Wrong answer
         }
@@ -35,6 +37,7 @@ const EasyQuestion = () => {
         setIsSubmitted(true); // Set the state to true to indicate the submission
     };
     const handleReload = () => {
+        setlocalScore(0);
         setCurrentIndex(0);  // Reset to the first question of the hard level
         setSelectedOption("");  // Reset selected option
         setIsCorrectAnswer(null);  // Reset answer status
@@ -45,6 +48,12 @@ const EasyQuestion = () => {
         setTotalScore(0);  // Reset the total score
         navigate('/');  // Navigate to the home or first question (modify the route if needed)
     };
+    const handleNavigation = () => {
+        setTotalScore(totalScore + localScore);
+        navigate('/hardquestion')
+    };
+    // console.log("total score",totalScore);
+    // console.log("local score",localScore);
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-blue-100">
             <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md">
@@ -159,7 +168,7 @@ const EasyQuestion = () => {
             {/* Render the result after the level is submitted */}
             {isSubmitted && (
                 <div className="mt-8 text-center bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-                    {totalScore < 60 ? (
+                    {localScore < 40 ? (
                         <div>
                             <h1 className="text-2xl font-bold text-red-600">Sorry, you didn't qualify.</h1>
                             <p className="mt-2 text-lg text-gray-700">Try again to qualify for the next round!</p>
@@ -181,7 +190,7 @@ const EasyQuestion = () => {
                             <h1 className="text-2xl font-bold text-green-600">Congratulations! 🎉</h1>
                             <p className="mt-2 text-lg text-gray-700">You qualified for the next round.</p>
                             <button
-                                onClick={() => navigate('/hardquestion')} // Navigate to MediumQuestion
+                                onClick={ handleNavigation} // Navigate to MediumQuestion
                                 className="mt-4 bg-purple-500 text-white px-5 py-2 rounded-lg hover:bg-purple-600"
                             >
                                 Go to Next Level
@@ -194,4 +203,4 @@ const EasyQuestion = () => {
     );
 };
 
-export default EasyQuestion;
+export default MediumQuestion;

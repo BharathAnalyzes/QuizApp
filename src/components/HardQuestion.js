@@ -13,12 +13,14 @@ const HardQuestion = () => {
     const questions = question?.hard;
     const { totalScore, setTotalScore } = useContext(questionContext); // Manage the total score
     const navigate = useNavigate(); // Hook to handle navigation
+    const [localScore, setlocalScore] = useState(0);
 
     // Function to validate the selected answer
     const validateRightAnswer = () => {
         if (questions?.[currentIndex]?.correctAnswer.trim().toLowerCase() === selectedOption.trim().toLowerCase()) {
             setIsCorrectAnswer(true);  // Correct answer
-            setTotalScore(totalScore + 30); // Increase score by 30 for hard level
+            //setTotalScore(totalScore + 30); // Increase score by 30 for hard level
+            setlocalScore(localScore+30);
         } else {
             setIsCorrectAnswer(false); // Wrong answer
         }
@@ -33,7 +35,10 @@ const HardQuestion = () => {
 
     // Function to handle hard level submission
     const handleHardLevelSubmit = () => {
-        if (totalScore < 120) {  // Assuming 120 is the passing score
+        // if (totalScore < 120) {  // Assuming 120 is the passing score
+        //     setHasFailed(true);   // Set failed status if score is less than 120
+        // }
+        if (localScore < 60) {  // Assuming 120 is the passing score
             setHasFailed(true);   // Set failed status if score is less than 120
         }
         setIsSubmitted(true);  // Mark the quiz as submitted
@@ -41,6 +46,7 @@ const HardQuestion = () => {
 
     // Function to restart only the hard level
     const handleRetryHardLevel = () => {
+        setlocalScore(0);
         setCurrentIndex(0);  // Reset to the first question of the hard level
         setSelectedOption("");  // Reset selected option
         setIsCorrectAnswer(null);  // Reset answer status
@@ -54,6 +60,12 @@ const HardQuestion = () => {
         navigate('/');  // Navigate to the home or first question (modify the route if needed)
     };
 
+    // const handleNavigation = () => {
+    //     setTotalScore(totalScore+localScore)
+    //     navigate('/mediumquestion')
+    // };
+    // console.log("total score",totalScore);
+    // console.log("local score",localScore);
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-blue-100">
             <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md">
@@ -199,7 +211,7 @@ const HardQuestion = () => {
                                 </button>
                             </>
                         )}
-                        <p className="text-lg mt-4">Your total score: {totalScore}</p>
+                        <p className="text-lg mt-4">Your total score: {totalScore+localScore}</p>
                     </div>
                 )}
             </div>
